@@ -1,0 +1,64 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+
+const {
+  title = 'Rodrigo F. P. Oliveira — Desenvolvedor de software',
+  description = 'Portfólio e blog pessoal de Rodrigo F. P. Oliveira sobre desenvolvimento, projetos e aprendizados.',
+  image = '/og.svg',
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const socialImage = new URL(image, Astro.site);
+const year = new Date().getFullYear();
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title="Blog de Rodrigo" href="/rss.xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={socialImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+    <header class="site-header">
+      <nav class="nav shell" aria-label="Navegação principal">
+        <a class="brand" href="/" aria-label="Página inicial">r<span>.</span></a>
+        <div class="nav-links">
+          <a href="/#projetos">Projetos</a>
+          <a href="/blog">Blog</a>
+          <a href="/#sobre">Sobre</a>
+        </div>
+        <a class="nav-cta" href="mailto:rodrigofpo@gmail.com">Vamos conversar <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+    <main id="conteudo"><slot /></main>
+    <footer class="footer shell">
+      <p>Projetando, programando e aprendendo.</p>
+      <div>
+        <a href="https://github.com/rodrigofpo" rel="me">GitHub</a>
+        <a href="mailto:rodrigofpo@gmail.com">E-mail</a>
+      </div>
+      <small>© {year} Rodrigo F. P. Oliveira</small>
+    </footer>
+  </body>
+</html>
