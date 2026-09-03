@@ -1,6 +1,6 @@
 ---
 title: "Construir em público, aprender em dobro"
-description: "Como registrar o processo transforma projetos incompletos em conhecimento útil."
+description: "Como registrar decisões, mudanças e aprendizados durante um projeto transforma trabalhos incompletos em conhecimento útil e reutilizável."
 publishedAt: 2026-08-18
 tags: [Processo, Aprendizado]
 ---

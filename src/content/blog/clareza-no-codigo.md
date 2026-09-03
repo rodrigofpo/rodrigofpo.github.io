@@ -1,6 +1,6 @@
 ---
 title: "Clareza também é uma feature"
-description: "Notas sobre nomes, limites e as pequenas escolhas que tornam sistemas mais fáceis de mudar."
+description: "Como bons nomes, limites explícitos e pequenas decisões de código tornam sistemas mais claros, sustentáveis e fáceis de modificar."
 publishedAt: 2026-07-29
 tags: [Código, Engenharia]
 ---

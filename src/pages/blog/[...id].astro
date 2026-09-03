@@ -2,8 +2,10 @@
 import type {GetStaticPaths} from 'astro';
 import {render} from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import {formatPostDate} from '../../lib/dates';
 import {getPublishedPosts} from '../../lib/posts';
+import {getBlogPostingStructuredData, getBreadcrumbStructuredData} from '../../lib/seo';
 
 export const getStaticPaths = (async () => {
     const posts = await getPublishedPosts();
@@ -12,10 +14,38 @@ export const getStaticPaths = (async () => {
 
 const {post} = Astro.props;
 const {Content} = await render(post);
+const postPath = `/blog/${post.id}/`;
+const image = post.data.image ?? '/og.png';
+const imageAlt = post.data.imageAlt ?? `Imagem de apresentação do artigo ${post.data.title}`;
+const breadcrumbs = [
+    {name: 'Início', path: '/'},
+    {name: 'Blog', path: '/blog/'},
+    {name: post.data.title, path: postPath},
+];
+const structuredData = [
+    getBreadcrumbStructuredData(breadcrumbs),
+    getBlogPostingStructuredData({
+        title: post.data.title,
+        description: post.data.description,
+        path: postPath,
+        publishedAt: post.data.publishedAt,
+        updatedAt: post.data.updatedAt,
+        image,
+    }),
+];
 ---
-<BaseLayout title={`${post.data.title} — Rodrigo F. P. Oliveira`} description={post.data.description}>
+<BaseLayout
+    title={`${post.data.title} — Rodrigo F. P. Oliveira`}
+    description={post.data.description}
+    type="article"
+    image={image}
+    imageAlt={imageAlt}
+    publishedAt={post.data.publishedAt}
+    updatedAt={post.data.updatedAt}
+    jsonLd={structuredData}>
     <article class="article shell">
-        <a class="back-link" href="/blog">← Voltar para o blog</a>
+        <Breadcrumbs items={breadcrumbs}/>
+        <a class="back-link" href="/blog/">← Voltar para o blog</a>
         <header>
             <div class="article-meta">
                 <time datetime={post.data.publishedAt.toISOString()}>{formatPostDate(post.data.publishedAt)}</time>

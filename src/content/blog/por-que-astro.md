@@ -1,6 +1,6 @@
 ---
 title: "Por que escolhi Astro para este site"
-description: "As decisões por trás de um portfólio leve, simples de manter e feito para conteúdo."
+description: "Entenda por que escolhi Astro para criar um portfólio leve, rápido, simples de manter e preparado para publicar conteúdo em Markdown."
 publishedAt: 2026-09-02
 tags: [Astro, Web, Bastidores]
 ---
