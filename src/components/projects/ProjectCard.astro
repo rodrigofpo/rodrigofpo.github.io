@@ -1,0 +1,36 @@
+---
+import type { Project } from '../../data/projects';
+
+interface Props { project: Project; index: number }
+const { project, index } = Astro.props;
+const external = project.href.startsWith('http');
+---
+
+<a class="project-card" href={project.href} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined}>
+  <div class:list={['project-visual', project.variant]}>
+    <span class="project-number">{String(index + 1).padStart(2, '0')}</span>
+    <span class="project-status">{project.status}</span>
+    <strong>{project.symbol}</strong>
+  </div>
+  <div class="project-copy">
+    <h3>{project.title}</h3><span aria-hidden="true">↗</span>
+    <p>{project.description}</p>
+    <ul>{project.tags.map(tag => <li>{tag}</li>)}</ul>
+  </div>
+</a>
+
+<style>
+  .project-card { display: block }
+  .project-visual { height: 390px; padding: 24px; position: relative; display: flex; justify-content: space-between; overflow: hidden }
+  .primary { background: var(--project-primary); color: var(--contrast-text) }
+  .secondary { background: var(--project-secondary); color: var(--text); border: 1px solid var(--line) }
+  .project-visual strong { position: absolute; font-family: var(--serif), serif; font-size: 210px; line-height: 1; left: 50%; top: 52%; transform: translate(-50%, -50%); font-weight: 400 }
+  .project-status { font-size: 12px; text-transform: uppercase; letter-spacing: .12em }
+  .project-copy { display: grid; grid-template-columns: 1fr auto; padding: 24px 0 }
+  .project-copy h3 { font-size: 25px; margin-bottom: 8px }
+  .project-copy > span { color: var(--lime); font-size: 22px }
+  .project-copy p { grid-column: 1/-1; color: var(--muted); max-width: 520px }
+  ul { grid-column: 1/-1; display: flex; gap: 8px; list-style: none; padding: 0; margin: 8px 0 }
+  li { border: 1px solid var(--line); border-radius: 20px; padding: 4px 11px; color: var(--muted); font-size: 12px }
+  @media (max-width: 720px) { .project-visual { height: 300px } }
+</style>

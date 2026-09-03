@@ -1,12 +1,12 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import PostRow from '../components/blog/PostRow.astro';
+import ProjectCard from '../components/projects/ProjectCard.astro';
 import { projects } from '../data/projects';
+import { getPublishedPosts } from '../lib/posts';
 
-const posts = (await getCollection('blog', ({ data }) => !data.draft))
-  .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf())
-  .slice(0, 3);
-const formatDate = (date: Date) => new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }).format(date);
+const posts = await getPublishedPosts({ limit: 3 });
 ---
 
 <BaseLayout>
@@ -20,41 +20,16 @@ const formatDate = (date: Date) => new Intl.DateTimeFormat('pt-BR', { day: '2-di
   </section>
 
   <section class="section shell" id="projetos">
-    <div class="section-heading">
-      <p class="kicker">01 / Projetos selecionados</p>
-      <h2>Trabalho recente</h2>
-    </div>
+    <SectionHeading eyebrow="01 / Projetos selecionados" title="Trabalho recente" />
     <div class="project-grid">
-      {projects.map((project, index) => (
-        <a class="project-card" href={project.href} target={project.href.startsWith('http') ? '_blank' : undefined}>
-          <div class={`project-visual visual-${index + 1}`}>
-            <span class="project-number">0{index + 1}</span>
-            <span class="project-status">{project.status}</span>
-            <strong>{index === 0 ? 'r.' : '→'}</strong>
-          </div>
-          <div class="project-copy">
-            <h3>{project.title}</h3><span aria-hidden="true">↗</span>
-            <p>{project.description}</p>
-            <ul>{project.tags.map(tag => <li>{tag}</li>)}</ul>
-          </div>
-        </a>
-      ))}
+      {projects.map((project, index) => <ProjectCard project={project} index={index} />)}
     </div>
   </section>
 
   <section class="section journal shell">
-    <div class="section-heading inline">
-      <div><p class="kicker">02 / Caderno de notas</p><h2>Escrevendo para pensar</h2></div>
-      <a class="text-link" href="/blog">Todos os textos <span>→</span></a>
-    </div>
+    <SectionHeading eyebrow="02 / Caderno de notas" title="Escrevendo para pensar" href="/blog" linkLabel="Todos os textos" inline />
     <div class="post-list">
-      {posts.map(post => (
-        <a class="post-row" href={`/blog/${post.id}/`}>
-          <time datetime={post.data.publishedAt.toISOString()}>{formatDate(post.data.publishedAt)}</time>
-          <div><h3>{post.data.title}</h3><p>{post.data.description}</p></div>
-          <span aria-hidden="true">↗</span>
-        </a>
-      ))}
+      {posts.map(post => <PostRow post={post} />)}
     </div>
   </section>
 

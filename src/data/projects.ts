@@ -1,10 +1,22 @@
-export const projects = [
+export type Project = {
+  title: string;
+  description: string;
+  tags: string[];
+  href: string;
+  status: string;
+  symbol: string;
+  variant: 'primary' | 'secondary';
+};
+
+export const projects: Project[] = [
   {
     title: 'Este portfólio',
     description: 'Um espaço pessoal rápido e acessível, feito com Astro para reunir projetos, ideias e aprendizados.',
     tags: ['Astro', 'TypeScript', 'Design'],
     href: 'https://github.com/rodrigofpo/rodrigofpo.github.io',
     status: 'Em evolução',
+    symbol: 'r.',
+    variant: 'primary',
   },
   {
     title: 'Próximo projeto',
@@ -12,5 +24,7 @@ export const projects = [
     tags: ['Em breve'],
     href: '#contato',
     status: 'Em construção',
+    symbol: '→',
+    variant: 'secondary',
   },
 ];

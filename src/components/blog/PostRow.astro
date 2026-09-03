@@ -1,0 +1,44 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { formatPostDate } from '../../lib/dates';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  variant?: 'compact' | 'complete';
+  index?: number;
+}
+
+const { post, variant = 'compact', index } = Astro.props;
+const complete = variant === 'complete';
+---
+
+<a class:list={['post-row', variant]} href={`/blog/${post.id}/`}>
+  {complete && typeof index === 'number'
+    ? <span class="index">{String(index + 1).padStart(2, '0')}</span>
+    : <time datetime={post.data.publishedAt.toISOString()}>{formatPostDate(post.data.publishedAt, 'short')}</time>}
+  <div>
+    {complete && <time datetime={post.data.publishedAt.toISOString()}>{formatPostDate(post.data.publishedAt)}</time>}
+    {complete ? <h2>{post.data.title}</h2> : <h3>{post.data.title}</h3>}
+    <p>{post.data.description}</p>
+    {complete && <ul>{post.data.tags.map(tag => <li>{tag}</li>)}</ul>}
+  </div>
+  <span class="arrow" aria-hidden="true">↗</span>
+</a>
+
+<style>
+  .post-row { display: grid; grid-template-columns: 160px 1fr auto; gap: 24px; align-items: start; padding: 32px 0; border-bottom: 1px solid var(--line); transition: padding .2s }
+  .post-row:hover { padding-left: 10px }
+  time, p, .index { color: var(--muted); font-size: 14px }
+  h3, h2 { font-size: 22px; margin: 0 0 6px }
+  p { margin: 0 }
+  .arrow { color: var(--lime); font-size: 20px }
+  .complete { grid-template-columns: 100px 1fr auto; padding: 42px 0 }
+  .complete h2 { font-family: var(--serif), serif; font-size: 38px; font-weight: 400; margin: 8px 0 }
+  ul { display: flex; gap: 8px; list-style: none; padding: 0; margin: 8px 0 }
+  li { border: 1px solid var(--line); border-radius: 20px; padding: 4px 11px; color: var(--muted); font-size: 12px }
+  @media (max-width: 720px) {
+    .post-row, .complete { grid-template-columns: 1fr auto }
+    .post-row > time, .index { grid-column: 1/-1 }
+    .post-row > div { grid-column: 1 }
+  }
+</style>

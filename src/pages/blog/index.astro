@@ -1,13 +1,9 @@
 ---
-import {getCollection} from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostRow from '../../components/blog/PostRow.astro';
+import {getPublishedPosts} from '../../lib/posts';
 
-const posts = (await getCollection('blog', ({data}) => !data.draft)).sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
-const formatDate = (date: Date) => new Intl.DateTimeFormat('pt-BR', {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric'
-}).format(date);
+const posts = await getPublishedPosts();
 ---
 <BaseLayout title="Blog — Rodrigo F. P. Oliveira"
             description="Notas sobre desenvolvimento, tecnologia, projetos e aprendizados.">
@@ -17,18 +13,6 @@ const formatDate = (date: Date) => new Intl.DateTimeFormat('pt-BR', {
         <p>Textos sobre desenvolvimento, tecnologia e os aprendizados que aparecem no caminho.</p>
     </section>
     <section class="blog-index shell">
-        {posts.map((post, index) => (
-                <a class="post-row" href={`/blog/${post.id}/`}>
-                    <span class="index">0{index + 1}</span>
-                    <div>
-                        <time datetime={post.data.publishedAt.toISOString()}>{formatDate(post.data.publishedAt)}</time>
-                        <h2>{post.data.title}</h2>
-                        <p>{post.data.description}</p>
-                        <ul>{post.data.tags.map(tag =>
-                                <li>{tag}</li>)}</ul>
-                    </div>
-                    <span aria-hidden="true">↗</span>
-                </a>
-        ))}
+        {posts.map((post, index) => <PostRow post={post} index={index} variant="complete" />)}
     </section>
 </BaseLayout>

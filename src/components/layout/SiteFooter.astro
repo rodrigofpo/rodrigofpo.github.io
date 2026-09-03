@@ -1,0 +1,24 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="footer shell">
+  <p>Projetando, programando e aprendendo.</p>
+  <div>
+    <a href="https://github.com/rodrigofpo" rel="me">GitHub</a>
+    <a href="mailto:rodrigofpo@gmail.com">E-mail</a>
+  </div>
+  <small>© {year} Rodrigo F. P. Oliveira</small>
+</footer>
+
+<style>
+  .footer { min-height: 180px; padding: 45px 0; display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: start; color: var(--muted); font-size: 14px }
+  .footer div { display: flex; gap: 24px }
+  .footer a { color: var(--muted); transition: color .2s }
+  .footer a:hover { color: var(--text) }
+  .footer small { grid-column: 1/-1; align-self: end }
+  @media (max-width: 720px) {
+    .footer { grid-template-columns: 1fr }
+    .footer small { grid-column: 1 }
+  }
+</style>
