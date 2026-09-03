@@ -1,23 +1,34 @@
 ---
-import { getCollection } from 'astro:content';
+import {getCollection} from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
-const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
-const formatDate = (date: Date) => new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' }).format(date);
+const posts = (await getCollection('blog', ({data}) => !data.draft)).sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+const formatDate = (date: Date) => new Intl.DateTimeFormat('pt-BR', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric'
+}).format(date);
 ---
-<BaseLayout title="Blog — Rodrigo F. P. Oliveira" description="Notas sobre desenvolvimento, tecnologia, projetos e aprendizados.">
-  <section class="page-intro shell">
-    <p class="kicker">Caderno de notas</p>
-    <h1>Ideias, descobertas<br />e <em>coisas em construção.</em></h1>
-    <p>Textos sobre desenvolvimento, tecnologia e os aprendizados que aparecem no caminho.</p>
-  </section>
-  <section class="blog-index shell">
-    {posts.map((post, index) => (
-      <a class="post-row" href={`/blog/${post.id}/`}>
-        <span class="index">0{index + 1}</span>
-        <div><time datetime={post.data.publishedAt.toISOString()}>{formatDate(post.data.publishedAt)}</time><h2>{post.data.title}</h2><p>{post.data.description}</p><ul>{post.data.tags.map(tag => <li>{tag}</li>)}</ul></div>
-        <span aria-hidden="true">↗</span>
-      </a>
-    ))}
-  </section>
+<BaseLayout title="Blog — Rodrigo F. P. Oliveira"
+            description="Notas sobre desenvolvimento, tecnologia, projetos e aprendizados.">
+    <section class="page-intro shell">
+        <p class="kicker">Caderno de notas</p>
+        <h1>Ideias, descobertas<br/>e <em>coisas em construção.</em></h1>
+        <p>Textos sobre desenvolvimento, tecnologia e os aprendizados que aparecem no caminho.</p>
+    </section>
+    <section class="blog-index shell">
+        {posts.map((post, index) => (
+                <a class="post-row" href={`/blog/${post.id}/`}>
+                    <span class="index">0{index + 1}</span>
+                    <div>
+                        <time datetime={post.data.publishedAt.toISOString()}>{formatDate(post.data.publishedAt)}</time>
+                        <h2>{post.data.title}</h2>
+                        <p>{post.data.description}</p>
+                        <ul>{post.data.tags.map(tag =>
+                                <li>{tag}</li>)}</ul>
+                    </div>
+                    <span aria-hidden="true">↗</span>
+                </a>
+        ))}
+    </section>
 </BaseLayout>
