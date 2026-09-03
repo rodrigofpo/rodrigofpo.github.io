@@ -36,6 +36,17 @@ const year = new Date().getFullYear();
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={socialImage} />
+    <script is:inline>
+      (() => {
+        const saved = localStorage.getItem('theme');
+        const preference = saved === 'light' || saved === 'dark' ? saved : 'system';
+        const resolved = preference === 'system'
+          ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+          : preference;
+        document.documentElement.dataset.theme = resolved;
+        document.documentElement.dataset.themePreference = preference;
+      })();
+    </script>
     <title>{title}</title>
   </head>
   <body>
@@ -48,7 +59,20 @@ const year = new Date().getFullYear();
           <a href="/blog">Blog</a>
           <a href="/#sobre">Sobre</a>
         </div>
-        <a class="nav-cta" href="mailto:rodrigofpo@gmail.com">Vamos conversar <span aria-hidden="true">↗</span></a>
+        <div class="nav-actions">
+          <div class="theme-switcher" role="group" aria-label="Tema do site">
+            <button type="button" data-theme-choice="system" aria-label="Usar tema do sistema" title="Sistema">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"></rect><path d="M8 21h8M12 17v4"></path></svg>
+            </button>
+            <button type="button" data-theme-choice="light" aria-label="Usar tema claro" title="Claro">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"></path></svg>
+            </button>
+            <button type="button" data-theme-choice="dark" aria-label="Usar tema escuro" title="Escuro">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.4A8.5 8.5 0 0 1 9.6 3.5 8.5 8.5 0 1 0 20.5 14.4Z"></path></svg>
+            </button>
+          </div>
+          <a class="nav-cta" href="mailto:rodrigofpo@gmail.com">Vamos conversar <span aria-hidden="true">↗</span></a>
+        </div>
       </nav>
     </header>
     <main id="conteudo"><slot /></main>
@@ -60,5 +84,32 @@ const year = new Date().getFullYear();
       </div>
       <small>© {year} Rodrigo F. P. Oliveira</small>
     </footer>
+    <script>
+      const query = window.matchMedia('(prefers-color-scheme: dark)');
+      const choices = document.querySelectorAll<HTMLButtonElement>('[data-theme-choice]');
+
+      const applyTheme = (preference: string) => {
+        const resolved = preference === 'system' ? (query.matches ? 'dark' : 'light') : preference;
+        document.documentElement.dataset.theme = resolved;
+        document.documentElement.dataset.themePreference = preference;
+        choices.forEach((button) => {
+          const active = button.dataset.themeChoice === preference;
+          button.setAttribute('aria-pressed', String(active));
+        });
+      };
+
+      choices.forEach((button) => button.addEventListener('click', () => {
+        const preference = button.dataset.themeChoice ?? 'system';
+        if (preference === 'system') localStorage.removeItem('theme');
+        else localStorage.setItem('theme', preference);
+        applyTheme(preference);
+      }));
+
+      query.addEventListener('change', () => {
+        if ((document.documentElement.dataset.themePreference ?? 'system') === 'system') applyTheme('system');
+      });
+
+      applyTheme(document.documentElement.dataset.themePreference ?? 'system');
+    </script>
   </body>
 </html>
