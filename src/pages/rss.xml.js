@@ -8,11 +8,13 @@ export async function GET(context) {
     title: 'Blog de Rodrigo F. P. Oliveira',
     description: 'Notas sobre desenvolvimento, tecnologia, projetos e aprendizados.',
     site: context.site,
+    customData: '<language>pt-BR</language>',
     items: posts.map((post) => ({
       title: post.data.title,
       description: post.data.description,
       pubDate: post.data.publishedAt,
       link: `/blog/${post.id}/`,
+      categories: post.data.tags,
     })),
   });
 }

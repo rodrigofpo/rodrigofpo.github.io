@@ -1,13 +1,18 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PostRow from '../../components/blog/PostRow.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import {getPublishedPosts} from '../../lib/posts';
+import {getBreadcrumbStructuredData} from '../../lib/seo';
 
 const posts = await getPublishedPosts();
+const breadcrumbs = [{name: 'Início', path: '/'}, {name: 'Blog', path: '/blog/'}];
 ---
 <BaseLayout title="Blog — Rodrigo F. P. Oliveira"
-            description="Notas sobre desenvolvimento, tecnologia, projetos e aprendizados.">
+            description="Artigos de Rodrigo F. P. Oliveira sobre desenvolvimento de software, tecnologia, decisões de projeto e aprendizados práticos."
+            jsonLd={getBreadcrumbStructuredData(breadcrumbs)}>
     <section class="page-intro shell">
+        <Breadcrumbs items={breadcrumbs}/>
         <p class="kicker">Caderno de notas</p>
         <h1>Ideias, descobertas<br/>e <em>coisas em construção.</em></h1>
         <p>Textos sobre desenvolvimento, tecnologia e os aprendizados que aparecem no caminho.</p>

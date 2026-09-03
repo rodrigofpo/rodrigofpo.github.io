@@ -6,16 +6,32 @@ import SiteFooter from '../components/layout/SiteFooter.astro';
 interface Props {
   title?: string;
   description?: string;
+  type?: 'website' | 'article';
   image?: string;
+  imageAlt?: string;
+  publishedAt?: Date;
+  updatedAt?: Date;
+  robots?: string;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 
 const {
   title = 'Rodrigo F. P. Oliveira — Desenvolvedor de software',
-  description = 'Portfólio e blog pessoal de Rodrigo F. P. Oliveira sobre desenvolvimento, projetos e aprendizados.',
-  image = '/og.svg',
+  description = 'Portfólio e blog de Rodrigo F. P. Oliveira sobre desenvolvimento de software, projetos web, decisões técnicas e aprendizados.',
+  type = 'website',
+  image = '/og.png',
+  imageAlt = 'Rodrigo F. P. Oliveira — desenvolvimento de software, projetos e aprendizados',
+  publishedAt,
+  updatedAt,
+  robots,
+  jsonLd,
 } = Astro.props;
-const canonical = new URL(Astro.url.pathname, Astro.site);
+const canonicalPath = Astro.url.pathname === '/' ? '/' : `${Astro.url.pathname.replace(/\/+$/, '')}/`;
+const canonical = new URL(canonicalPath, Astro.site);
 const socialImage = new URL(image, Astro.site);
+const structuredData = jsonLd
+  ? JSON.stringify({ '@context': 'https://schema.org', '@graph': Array.isArray(jsonLd) ? jsonLd : [jsonLd] }).replace(/</g, '\\u003c')
+  : undefined;
 ---
 
 <!doctype html>
@@ -25,18 +41,26 @@ const socialImage = new URL(image, Astro.site);
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
+    {robots && <meta name="robots" content={robots} />}
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="alternate" type="application/rss+xml" title="Blog de Rodrigo" href="/rss.xml" />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={type} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={socialImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={imageAlt} />
+    {type === 'article' && publishedAt && <meta property="article:published_time" content={publishedAt.toISOString()} />}
+    {type === 'article' && <meta property="article:modified_time" content={(updatedAt ?? publishedAt)?.toISOString()} />}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={socialImage} />
+    <meta name="twitter:image:alt" content={imageAlt} />
+    {structuredData && <script is:inline type="application/ld+json" set:html={structuredData} />}
     <script is:inline>
       (() => {
         const saved = localStorage.getItem('theme');

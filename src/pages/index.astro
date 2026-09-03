@@ -5,11 +5,12 @@ import PostRow from '../components/blog/PostRow.astro';
 import ProjectCard from '../components/projects/ProjectCard.astro';
 import { projects } from '../data/projects';
 import { getPublishedPosts } from '../lib/posts';
+import { getHomeStructuredData } from '../lib/seo';
 
 const posts = await getPublishedPosts({ limit: 3 });
 ---
 
-<BaseLayout>
+<BaseLayout jsonLd={getHomeStructuredData()}>
   <section class="hero shell">
     <div class="eyebrow"><span></span> Disponível para bons projetos</div>
     <h1>Transformo ideias em<br /><em>experiências digitais.</em></h1>
@@ -27,7 +28,7 @@ const posts = await getPublishedPosts({ limit: 3 });
   </section>
 
   <section class="section journal shell">
-    <SectionHeading eyebrow="02 / Caderno de notas" title="Escrevendo para pensar" href="/blog" linkLabel="Todos os textos" inline />
+    <SectionHeading eyebrow="02 / Caderno de notas" title="Escrevendo para pensar" href="/blog/" linkLabel="Todos os textos" inline />
     <div class="post-list">
       {posts.map(post => <PostRow post={post} />)}
     </div>

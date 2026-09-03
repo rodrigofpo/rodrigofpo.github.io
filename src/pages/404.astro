@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Página não encontrada — Rodrigo F. P. Oliveira"
+  description="A página que você procurou não foi encontrada. Visite o portfólio ou explore os artigos do blog de Rodrigo F. P. Oliveira."
+  robots="noindex,follow">
+  <section class="not-found shell">
+    <p class="kicker">Erro 404</p>
+    <h1>Esta página saiu<br /><em>do mapa.</em></h1>
+    <p>O endereço pode ter mudado ou deixado de existir. Você pode voltar ao início, conhecer os projetos ou continuar pelo blog.</p>
+    <nav aria-label="Alternativas à página não encontrada">
+      <a href="/">Página inicial <span aria-hidden="true">→</span></a>
+      <a href="/#projetos">Ver projetos <span aria-hidden="true">→</span></a>
+      <a href="/blog/">Explorar o blog <span aria-hidden="true">→</span></a>
+    </nav>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found { min-height: 70vh; padding: 100px 0 130px }
+  h1 { margin: 36px 0; font-family: var(--serif), serif; font-size: clamp(64px, 9vw, 120px); font-weight: 400; line-height: .9; letter-spacing: -.04em }
+  h1 em { color: var(--lime); font-weight: 400 }
+  .not-found > p:not(.kicker) { max-width: 620px; color: var(--muted); font-size: 19px }
+  nav { display: flex; flex-wrap: wrap; gap: 28px; margin-top: 42px }
+  nav a { border-bottom: 1px solid var(--line); padding-bottom: 5px }
+  nav span { color: var(--lime); margin-left: 6px }
+</style>
